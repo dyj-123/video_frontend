@@ -9,8 +9,8 @@
         <Layout :style="{padding: '0 24px 24px'}">
           <Content :style="{padding: '24px',margin: '88px 0 0', minHeight: '280px', background: '#fff'}">
             <Row>
-              <Col>
-                <Button type="primary"  icon="md-add"
+              <Col span="24">
+                <Button type="primary"  icon="md-add" style="float: left"
                         @click.native.prevent="uploadShow()"
                 >上传视频</Button>
 
@@ -19,7 +19,7 @@
                   :search="true"
                   suffix="ios-search"
                   placeholder="请输入视频标题"
-                  style="width: auto;margin-left: 10px"
+                  style="width: auto;float: right"
                   @on-search="searchTree" />
               </Col>
             </Row>
@@ -30,7 +30,7 @@
 
             <el-table
               :data="tableData"
-              style="width: 100%"
+              style="width: 100%;margin-top: 10px"
             >
               <el-table-column
                 fixed
