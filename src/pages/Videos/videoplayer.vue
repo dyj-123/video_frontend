@@ -4,14 +4,14 @@
     <Layout :style="back">
       <HeadMenu/>
       <Layout>
-        <Sider hide-trigger :style="{background: '#fff'}">
+        <Sider hide-trigger :style="{background: '#fff',margin:'64px 0 0',position:'fixed',height: '100%'}">
           <SideMenu/>
         </Sider>
         <Layout :style="{padding: '0 24px 24px'}">
 
-          <Content  :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
-            <Row>
-              <Col span="18" offset="1">
+          <Content  :style="{padding: '24px',margin: '88px 0 0 200px', minHeight: '800px', background: '#fff'}">
+            <Row type="flex" justify="left" align="top" class="code-row-bg">
+              <Col span="16" >
                 <video-player   class="video-player vjs-custom-skin"
                                 ref="videoPlayer" :options="playerOptions" :playsinline="true"
                                 customEventName="customstatechangedeventname"
@@ -21,6 +21,22 @@
                 >
                 </video-player>
               </Col>
+
+              <Col span="7" offset="1" style="text-align: left">
+                <h2>
+                  {{videoInfo.title}}
+                </h2>
+                <el-card class="box-card" shadow="never" style="margin-top: 20px;padding:0;background-color: #f8f9fb">
+                  <span>
+                    {{videoInfo.description}}
+                  </span>
+                  <span>
+                    {{videoInfo.author}}
+                  </span>
+                </el-card>
+              </Col>
+
+
             </Row>
 
           </Content>
@@ -91,12 +107,30 @@
             remainingTimeDisplay: false,
             fullscreenToggle: true //全屏按钮
           }
+        },
+        videoInfo:{
+          id:'',
+          title:'',
+          description:'',
+          picture:'',
+          url:'',
+          author:''
         }
 
       }
     },
     mounted() {
+
+   //   alert(this.$route.params.title)
+      this.videoInfo.id = this.$route.query.id;
+      this.videoInfo.title = this.$route.query.title;
+      this.videoInfo.author = this.$route.query.author;
+      this.videoInfo.description = this.$route.query.description;
+      console.log(this.videoInfo);
       this.playVideo(this.$route.query.url)
+
+
+
     },
     computed: {
       player() {

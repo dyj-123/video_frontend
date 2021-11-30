@@ -7,7 +7,7 @@
         </MenuItem>
         <MenuItem name="1-4" to = "/videoList">
           <Icon type="ios-navigate"></Icon>
-          <span>视频列表</span>
+          <span>视频广场</span>
         </MenuItem>
       </Menu>
 

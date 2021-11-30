@@ -50,3 +50,18 @@ export function uploadVideoToServer(params){
   })
 }
 
+export function getTypeList(){
+  return axios.get('/v1/getTypeList')
+}
+
+export function getVideoByType(title,typeId,curPage,pageSize){
+  return axios.get('/v1/getVideoByType',{
+    params:{
+      'title':title,
+      'typeId':typeId,
+      'curPage':curPage,
+      'pageSize':pageSize
+    }
+  })
+}
+

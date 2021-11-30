@@ -4,26 +4,43 @@
     <Layout :style="back">
       <HeadMenu/>
       <Layout>
-        <Sider hide-trigger :style="{background: '#fff'}">
+        <Sider hide-trigger :style="{background: '#fff',margin:'64px 0 0',position:'fixed',height: '100%'}">
           <SideMenu/>
         </Sider>
         <Layout :style="{padding: '0 24px 24px'}">
-
-          <Content  :style="{padding: '24px', minHeight: '400px', background: '#fff'}">
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-              <el-menu-item index="1">课程</el-menu-item>
-              <el-menu-item index="2">待定</el-menu-item>
+          <Content  :style="{padding: '24px',margin: '88px 0 0 200px', minHeight: '800px', background: '#fff'}">
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="SelectType">
+              <el-menu-item index="0">
+                全部
+              </el-menu-item>
+              <el-menu-item v-for="item in typeList" :key="item.id" :index="item.id">
+                {{ item.type }}
+              </el-menu-item>
+              <el-menu-item style="float: right" index="-1">
+                <Input
+                  v-model="searchTitle"
+                  :search="true"
+                  suffix="ios-search"
+                  placeholder="请输入视频标题"
+                  style="width: auto;margin-left: 10px"
+                  @on-search="showVideoByType" />
+              </el-menu-item>
             </el-menu>
             <div class="line"></div>
             <br>
             <Row>
               <Col :span="6" style="padding-left: 10px; padding-bottom: 10px;" v-for="item in videoInfo" :key="item.id">
-                <el-card shadow="hover" @click.native="openURL(item.url)" style="height: 200px;max-width: 300px;">
-                  <img :src="item.picture" style="height:140px;width:100%" class="image" >
-                  <div style="padding: 0px;">
-                    <h3>{{ item.title }}</h3>
+                <el-card :body-style="{ padding: '0px' }">
+                  <img :src="item.picture" style="height:140px;width:100%" class="image" @click="openURL(item)" >
+                  <div style="padding: 14px;text-align: left">
+                    <span>{{ item.title }}</span>
+                    <div class="bottom clearfix">
+                      <span class="time" >{{ dateFormat(item.uploadTime) }}</span>
+                    </div>
                   </div>
+
                 </el-card>
+
               </Col>
 
             </Row>
@@ -36,7 +53,7 @@
                 :total ="total"
                 style="padding:30px 0; text-align:center;"
                 layout="total,prev,pager,next,jumper"
-                @current-change="changePage">
+                @current-change="showVideoByType">
               </el-pagination>
             </div>
           </Content>
@@ -48,8 +65,6 @@
       </Layout>
 
     </Layout>
-
-
 
 
   </div>
@@ -65,12 +80,17 @@ import axios from 'axios';
 import HeadMenu from "../admin/HeadMenu";
 import SideMenu from "../admin/SideMenu";
 import {deleteVideo, editVideo, getAllVideo} from "@/api/api";
+import {getTypeList, getVideoByType} from "../../api/api";
+import moment from "moment";
+
 Vue.prototype.$axios = axios;
 export default {
   components: {SideMenu, HeadMenu},
   data() {
     return {
       currentVideo:'',
+
+      typeList:[],
       // 很多参数其实没必要的，也还有很多参数没列出来，只是把我看到的所有文章做一个统计
       playerOptions: {
         height: "30%",
@@ -111,10 +131,13 @@ export default {
       pageSize:8,
       total:0,
       videoInfo:[],
+      activeIndex:'0',
+      searchTitle:'',
     }
   },
   mounted() {
-    this.show_List(this.curPage,this.pageSize)
+    this.showVideoByType(1,0);
+    this.getTypeList();
   },
   computed: {
     player() {
@@ -122,20 +145,62 @@ export default {
     },
   },
   methods: {
-    openURL(url){
-      this.$router.push({name:'videoplayer',query:{url: url}})
+
+    dateFormat(date) {
+
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    },
+    openURL(item){
+
+      this.$router.push({name:'videoplayer',
+        query:{
+          url: item.url,
+          id: item.id,
+          title: item.title,
+          description:item.description,
+          author:item.author,
+          uploadTime:item.uploadTime,
+          type:item.type
+        }})
+
     },
     async changePage(val){
       if(val){
         this.curPage = val;
       }
     },
-    async show_List(curPage,pageSize){
-      var data = (await (getAllVideo(this.curPage,this.pageSize))).data;
+
+    async getTypeList(){
+      var data = (await(getTypeList())).data;
+      if(data.status === 200){
+        this.typeList = data.data.typeList;
+      }
+    },
+
+    async showVideoByType(val){
+      if(val){
+        this.curPage = val;
+      }
+     // alert(this.activeIndex)
+      var typeId=this.activeIndex;
+      var data = (await (getVideoByType(this.searchTitle,typeId,this.curPage,this.pageSize))).data;
       if(data.status === 200){
         this.videoInfo = data.data.videoList;
+
         this.total = data.data.total;
       }
+      this.searchTitle=''
+
+    },
+
+    SelectType(key){
+      if(key!=-1){
+        this.activeIndex=key;
+
+      }
+      this.showVideoByType(1)
+
+
     },
     onPlayerPause($event) {
       this.isPlay = false;
@@ -143,7 +208,6 @@ export default {
     onPlayerPlay($event) {
       this.isPlay = true;
     },
-
     onPlayerEnded($event) {},
     onPlayerClick() {
       if (this.isPlay) {
@@ -155,3 +219,34 @@ export default {
   }
 }
 </script>
+<style>
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+
+.button {
+  padding: 0;
+  float: right;
+}
+
+.image {
+  width: 100%;
+  display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
+}
+</style>
