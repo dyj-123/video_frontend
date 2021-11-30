@@ -9,8 +9,13 @@
         </Sider>
         <Layout :style="{padding: '0 24px 24px'}">
 
-          <Content  :style="{padding: '24px',margin: '88px 0 0 200px', minHeight: '800px', background: '#fff'}">
-            <Row type="flex" justify="left" align="top" class="code-row-bg">
+          <Content  :style="{padding: '24px',margin: '88px 30px 0 200px', background: '#fff'}">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+              <el-breadcrumb-item :to="{ name: 'videoList' }"><span style="color:#2d8cf0">返回视频广场</span></el-breadcrumb-item>
+              <el-breadcrumb-item>视频播放</el-breadcrumb-item>
+
+            </el-breadcrumb>
+            <Row type="flex" justify="left" align="top" class="code-row-bg" style="margin-top: 20px">
               <Col span="16" >
                 <video-player   class="video-player vjs-custom-skin"
                                 ref="videoPlayer" :options="playerOptions" :playsinline="true"
@@ -28,11 +33,13 @@
                 </h2>
                 <el-card class="box-card" shadow="never" style="margin-top: 20px;padding:0;background-color: #f8f9fb">
                   <span>
-                    {{videoInfo.description}}
+                    简介：{{videoInfo.description}}
                   </span>
+                  <br>
                   <span>
-                    {{videoInfo.author}}
+                   作者：{{videoInfo.author}}
                   </span>
+
                 </el-card>
               </Col>
 
@@ -115,7 +122,13 @@
           picture:'',
           url:'',
           author:''
-        }
+        },
+        back: {
+          backgroundSize: "100% 100%",
+          height: "100%",
+          position: "fixed",
+          width: "100%",
+        },
 
       }
     },
