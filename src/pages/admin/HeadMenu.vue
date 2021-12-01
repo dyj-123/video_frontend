@@ -37,7 +37,7 @@
 
           </MenuItem>
           <MenuItem name="5" style="float: right" :disabled="true" to="userCenter">
-            <avatar :src="avatar"></avatar>
+           
             <span style="color: white;margin-left: 10px">管理员</span>
 
           </MenuItem>

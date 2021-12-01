@@ -13,7 +13,6 @@
                 <Button type="primary"  icon="md-add" style="float: left"
                         @click.native.prevent="uploadShow()"
                 >上传视频</Button>
-
                 <Input
                   v-model="searchTitle"
                   :search="true"
@@ -23,10 +22,6 @@
                   @on-search="searchTree" />
               </Col>
             </Row>
-
-
-
-
 
             <el-table
               :data="tableData"
@@ -232,13 +227,8 @@
           </Content>
         </Layout>
       </Layout>
-
     </Layout>
-
   </div>
-
-
-
 </template>
 
 <script>

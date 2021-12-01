@@ -33,19 +33,16 @@
                 <el-card :body-style="{ padding: '0px' }">
                   <img :src="item.picture" style="height:140px;width:100%" class="image" @click="openURL(item)" >
                   <div style="padding: 14px;text-align: left">
-                    <span>{{ item.title }}</span>
+                    <h3 style="font-weight: bold;color: #666" class="view-text">{{ item.title }}</h3>
                     <div class="bottom clearfix">
                       <span class="time" >{{ dateFormat(item.uploadTime) }}</span>
+                      <span class="button" size="mini">来自 {{item.author}}</span>
                     </div>
+
                   </div>
-
                 </el-card>
-
               </Col>
-
             </Row>
-
-
             <div class="block">
               <el-pagination
                 :current-page="curPage"
@@ -57,16 +54,9 @@
               </el-pagination>
             </div>
           </Content>
-
-
-
         </Layout>
-
       </Layout>
-
     </Layout>
-
-
   </div>
 
 
@@ -79,7 +69,6 @@ import 'video.js/dist/video-js.css'
 import axios from 'axios';
 import HeadMenu from "../admin/HeadMenu";
 import SideMenu from "../admin/SideMenu";
-import {deleteVideo, editVideo, getAllVideo} from "@/api/api";
 import {getTypeList, getVideoByType} from "../../api/api";
 import moment from "moment";
 
@@ -228,11 +217,14 @@ export default {
 .bottom {
   margin-top: 13px;
   line-height: 12px;
+
 }
 
 .button {
   padding: 0;
   float: right;
+  font-size: 13px;
+  color: #999;
 }
 
 .image {
@@ -249,4 +241,20 @@ export default {
 .clearfix:after {
   clear: both
 }
+.view-text{
+  /**
+	思路：
+	1.设置inline-block属相
+	2.强制不换行
+	3.固定高度
+	4.隐藏超出部分
+	5.显示“……”
+  */
+  display: inline-block;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow:ellipsis;
+}
+
 </style>

@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import videoplayer from '../pages/Videos/videoplayer.vue'
-// import videoplayertest from '@/components/videoplayertest'
+
 import videoListtest from '../pages/Videos/videoListtest.vue'
 import VideoManange from "../pages/admin/VideoManange";
 import videoList from "../pages/Videos/videoList";
@@ -12,11 +11,7 @@ Vue.use(Router)
 export default new Router({
 
   routes: [
-    {
-      path: '/HelloWorld',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
+
     {
       path: '/videoplayer',
       name: 'videoplayer',

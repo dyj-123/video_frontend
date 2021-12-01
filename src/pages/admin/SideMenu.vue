@@ -1,11 +1,11 @@
 <template>
 
-      <Menu active-name="1-2" theme="light" width="auto" :open-names="['1']">
+      <Menu theme="light" width="auto" :open-names="['1']">
         <MenuItem name="1-1" to="/VideoManage">
           <Icon type="ios-navigate" ></Icon>
           <span>我的视频</span>
         </MenuItem>
-        <MenuItem name="1-4" to = "/videoList">
+        <MenuItem name="1-2" to = "/videoList">
           <Icon type="ios-navigate"></Icon>
           <span>视频广场</span>
         </MenuItem>
@@ -15,7 +15,16 @@
 
 <script>
 export default {
-  name: "SideMenu"
+  name: "SideMenu",
+  data(){
+    return{
+
+    }
+  },
+  methods:{
+
+
+  }
 }
 </script>
 
