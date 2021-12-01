@@ -10,7 +10,7 @@ import ElementUI from 'element-ui';
 import ViewUI from 'view-design';
 Vue.prototype.$axios = axios;
 var axios = require('axios');
-axios.defaults.baseURL = 'http://127.0.0.1:8081';
+axios.defaults.baseURL = 'http://10.10.22.106';
 //引入完成之后需要挂载到vue上
 import 'element-ui/lib/theme-chalk/index.css';
 import 'vue-video-player/src/custom-theme.css'
@@ -20,7 +20,6 @@ import EleUploadVideo from "vue-ele-upload-video";
 // import 'src/my-theme/index.less';
 
 Vue.use(ViewUI);
-
 Vue.component(EleUploadVideo.name, EleUploadVideo);
 Vue.use(VideoPlayer)
 Vue.use(ElementUI);
@@ -29,6 +28,40 @@ Vue.config.productionTip = false
 // var axios = require('axios');
 // axios.defaults.baseURL = 'http://10.10.22.106';
 /* eslint-disable no-new */
+
+axios.interceptors.request.use(
+  config => {
+    if (localStorage.getItem("token")) {
+      console.log(localStorage.getItem("token"));
+      config.headers.Authorization = localStorage.getItem("token");
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  response => {
+    //当返回信息为未登录或者登录失效的时候重定向为登录页面
+
+    if (response.data.status === 401) {
+      router.push({
+        path: "/",
+        query: { redirect: router.currentRoute.fullPath }//从哪个页面跳转
+      })
+    }
+    return response;
+  },
+  error => {
+    router.push({
+      path: "/",
+      query: { redirect: router.currentRoute.fullPath }//从哪个页面跳转
+    })
+    return Promise.reject(error)
+  }
+);
 new Vue({
   el: '#app',
   router,

@@ -1,5 +1,14 @@
 import axios from 'axios'
 axios.defaults.baseURL = '/api';
+//获取个人的所有视频
+export function getPersonalVideo(curPage,pageSize) {
+  return axios.get('/v1/personal/getAllVideo',
+    {params:{
+        'curPage':curPage, 'pageSize':pageSize
+      }
+    });
+}
+//获取所有视频
 export function getAllVideo(curPage,pageSize) {
   return axios.get('/v1/getAllVideo',
     {params:{
@@ -10,6 +19,16 @@ export function getAllVideo(curPage,pageSize) {
 // 通过视频标题获取视频
 export function getVideoByTitle(title,curPage,pageSize){
   return axios.get('/v1/getVideoByTitle',
+    {params:{
+        'title':title,
+        'curPage':curPage,
+        'pageSize':pageSize,
+      }
+    });
+}
+// 通过视频标题获取个人视频
+export function getPersonalVideoByTitle(title,curPage,pageSize){
+  return axios.get('/v1/personal/getVideoByTitle',
     {params:{
         'title':title,
         'curPage':curPage,
@@ -36,7 +55,7 @@ export function deleteVideo(videoId){
 
 export function editVideo(params){
   return axios.post('/v1/editVideoInfo',params,{ headers: {
-      'Content-Type': false}
+      'Content-Type': 'multipart/form-data'}
   })
 }
 export function editPicture(params){
@@ -63,5 +82,8 @@ export function getVideoByType(title,typeId,curPage,pageSize){
       'pageSize':pageSize
     }
   })
+}
+export function login(params){
+  return axios.post('/v1/login',params)
 }
 

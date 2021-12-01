@@ -36,21 +36,29 @@
             <a @click="logout">注销</a>
 
           </MenuItem>
-          <MenuItem name="5" style="float: right" :disabled="true" to="userCenter">
-           
-            <span style="color: white;margin-left: 10px">管理员</span>
+          <MenuItem name="5" to="Control" style="float: right">
+
+            欢迎 {{username}}！
 
           </MenuItem>
-
-
         </Menu>
       </Header>
 
 </template>
 <script>
 export default {
+  props: {
+    message: String //定义传值的类型<br>  }
+  },
+  watch: {
+    message: function(newVal) {
+      console.log(newVal);
+      this.username= newVal; //一定要写！！！
+    }
+  },
   data(){
     return{
+      username:this.message,
       back: {
 
         backgroundSize: "100% 100%",
@@ -59,8 +67,12 @@ export default {
         width: "100%",
 
       },
+
     }
-  }
+
+  },
+
+
 
 }
 </script>

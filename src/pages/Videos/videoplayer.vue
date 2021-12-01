@@ -2,7 +2,7 @@
 
   <div class="layout">
     <Layout :style="back">
-      <HeadMenu/>
+      <HeadMenu :message="username" v-if="username.length>0"></HeadMenu>
       <Layout>
         <Sider hide-trigger :style="{background: '#fff',margin:'64px 0 0',position:'fixed',height: '100%'}">
           <SideMenu/>
@@ -129,10 +129,12 @@
           position: "fixed",
           width: "100%",
         },
+        username:''
 
       }
     },
     mounted() {
+      this.username = localStorage.getItem("username")
 
    //   alert(this.$route.params.title)
       this.videoInfo.id = this.$route.query.id;

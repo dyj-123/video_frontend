@@ -2,7 +2,7 @@
 
   <div class="layout">
     <Layout :style="back">
-      <HeadMenu/>
+      <HeadMenu :message="username" v-if="username.length>0"></HeadMenu>
       <Layout>
         <Sider hide-trigger :style="{background: '#fff',margin:'64px 0 0',position:'fixed',height: '100%'}">
           <SideMenu/>
@@ -23,7 +23,7 @@
                   suffix="ios-search"
                   placeholder="请输入视频标题"
                   style="width: auto;margin-left: 10px"
-                  @on-search="showVideoByType" />
+                  @on-search="searchVideo" />
               </el-menu-item>
             </el-menu>
             <div class="line"></div>
@@ -122,9 +122,11 @@ export default {
       videoInfo:[],
       activeIndex:'0',
       searchTitle:'',
+      username:''
     }
   },
   mounted() {
+    this.username = localStorage.getItem("username")
     this.showVideoByType(1,0);
     this.getTypeList();
   },
@@ -166,7 +168,12 @@ export default {
       }
     },
 
+    searchVideo(key){
+      this.showVideoByType(1)
+    },
+
     async showVideoByType(val){
+
       if(val){
         this.curPage = val;
       }
@@ -185,11 +192,8 @@ export default {
     SelectType(key){
       if(key!=-1){
         this.activeIndex=key;
-
       }
       this.showVideoByType(1)
-
-
     },
     onPlayerPause($event) {
       this.isPlay = false;

@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <Layout :style="back">
-      <HeadMenu/>
+      <HeadMenu :message="username" v-if="username.length>0"></HeadMenu>
       <Layout>
         <Sider hide-trigger :style="{background: '#fff',margin:'64px 0 0'}">
           <SideMenu/>
@@ -141,10 +141,7 @@
               title="视频预览"
               @on-cancel="cancel">
               <video style="width: 475px" :src="videoInfo.url" controls='controls' autoplay>
-
               </video>
-
-
             </Modal>
             <Modal
               v-model="modal3"
@@ -172,14 +169,9 @@
                   <el-upload
                   class="upload-demo"
                   action="#"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :before-remove="beforeRemove"
                   multiple
                   :http-request="imgAdd"
                   :limit="1"
-                  :on-exceed="handleExceed"
-                  :file-list="fileList"
                   >
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -193,7 +185,6 @@
                     multiple
                     :limit="1"
                     :http-request="videoAdd"
-                    :file-list="fileList"
                   >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -238,7 +229,15 @@ import moment from 'moment'
 import HeadMenu from "./HeadMenu";
 import SideMenu from "./SideMenu";
 
-import {deleteVideo, editVideo, getAllVideo, uploadVideoToServer,getVideoByTitle,editPicture,getTypeList} from "@/api/api";
+
+import {
+  deleteVideo,
+  editPicture,
+  editVideo,
+  getPersonalVideo,
+  getPersonalVideoByTitle, getTypeList,
+  uploadVideoToServer
+} from "../../api/api";
 export default {
   name: "VideoManange",
   components: {SideMenu, HeadMenu},
@@ -249,6 +248,7 @@ export default {
       modal2:false,
       modal3: false,
       modal4:false,
+      username:'',
       curPage:1,
       pageSize:10,
       total:0,
@@ -269,8 +269,6 @@ export default {
         value: '选项5',
         label: '北京烤鸭'
       }],
-
-
       back: {
         backgroundSize: "100% 100%",
         height: "100%",
@@ -291,7 +289,8 @@ export default {
         title:'',
         description:'',
         picture:'',
-        url:''
+        url:'',
+        type:''
       },
       videoUpload:{
         title:'',
@@ -351,22 +350,7 @@ export default {
       }
 
     },
-    async searchTree(){
-      // alert(this.searchTitle)
-      if (this.searchTitle){
-        var data = (await (getVideoByTitle(this.searchTitle,this.curPage,this.pageSize))).data;
-        if(data.status===200){
-          this.tableData = data.data.videoList;
-          this.total = data.data.total;
-        }else{
-          this.$message.error("Fail");
-        }
-      }
-      else{
-        this.getAllVideo()
-      }
 
-    },
 
     deleteRow(index,rows) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -374,7 +358,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteVideo(rows.id);
+        this.deleteVideo(rows.id);
         this.getAllVideo();
       }).catch(() => {
         this.$message({
@@ -433,7 +417,7 @@ export default {
 
     async editRow(){
       var formdata = new FormData();
-       alert(this.videoInfo.type);
+       //alert(this.videoInfo.type);
       // formdata.append('file', this.videoInfo.picture.file);
       formdata.append('title',this.videoInfo.title);
       formdata.append('description',this.videoInfo.description);
@@ -442,25 +426,27 @@ export default {
       var data =(await editVideo(formdata)).data;
       if(data.status===200){
         this.$Message.success(data.msg);
-        location.reload();
+        this.getAllVideo(1);
       }else{
         this.$message.error("Fail");
       }
 
     },
 
+    searchTree(){
+      this.getAllVideo(1)
+    },
+
     async getAllVideo(val){
       if(val){
         this.curPage = val;
       }
-      var data = (await (getAllVideo(this.curPage,this.pageSize))).data;
+      var data = (await (getPersonalVideoByTitle(this.searchTitle,this.curPage,this.pageSize))).data;
       if(data.status === 200){
         this.tableData = data.data.videoList;
         this.total = data.data.total;
       }
-      // this.total  = this.tableData.length
     },
-
     async getTypeList(){
       var data = (await (getTypeList())).data;
       if(data.status === 200){
@@ -469,23 +455,17 @@ export default {
       }
     }
   },
-  handleRemove(file, fileList) {
-    console.log(file, fileList);
-  },
-  handlePreview(file) {
-    console.log(file);
-  },
-  handleExceed(files, fileList) {
-    this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-  },
+
   beforeRemove(file, fileList) {
     return this.$confirm(`确定移除 ${ file.name }？`);
   },
   mounted() {
+    this.username = localStorage.getItem("username");
     //获取视频列表
     this.getAllVideo();
     //获取分类
     this.getTypeList();
+
   }
 }
 </script>
