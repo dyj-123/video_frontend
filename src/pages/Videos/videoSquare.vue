@@ -1,49 +1,19 @@
 <template>
-  <div>
-            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="SelectType">
-              <el-menu-item index="0">
-                全部
-              </el-menu-item>
-              <el-menu-item v-for="item in tagList" :key="item.id" :index="item.id.toString()">
-                {{ item.tag }}
-              </el-menu-item>
-              <el-menu-item style="float: right" index="100">
-                <Input
-                  v-model="searchTitle"
-                  :search="true"
-                  suffix="ios-search"
-                  placeholder="请输入视频标题"
-                  style="width: auto;margin-left: 10px"
-                  @on-search="searchVideo" />
-              </el-menu-item>
-            </el-menu>
-            <div class="line"></div>
-            <br>
-            <Row>
-              <Col :span="6" style="padding-left: 10px; padding-bottom: 10px;" v-for="item in videoInfo" :key="item.id">
-                <el-card :body-style="{ padding: '0px' }">
-                  <img :src="item.picture" style="height:140px;width:100%" class="image" @click="openURL(item)" >
-                  <div style="padding: 14px;text-align: left">
-                    <h3 style="font-weight: bold;color: #666" class="view-text">{{ item.title }}</h3>
-                    <div class="bottom clearfix">
-                      <span class="time" >{{ dateFormat(item.uploadTime) }}</span>
-                      <span class="button" size="mini">来自 {{item.author}}</span>
-                    </div>
 
-                  </div>
-                </el-card>
-              </Col>
-            </Row>
-            <div class="block">
-              <el-pagination
-                :current-page="curPage"
-                :page-size ="pageSize"
-                :total ="total"
-                style="padding:30px 0; text-align:center;"
-                layout="total,prev,pager,next,jumper"
-                @current-change="showVideoByType">
-              </el-pagination>
-            </div>
+  <div class="layout">
+    <Layout :style="back">
+      <HeadMenu :message="username" v-if="username.length>0"></HeadMenu>
+      <Layout>
+        <Sider hide-trigger :style="{background: '#fff',margin:'64px 0 0',position:'fixed',height: '100%'}">
+          <SideMenu/>
+        </Sider>
+        <Layout :style="{padding: '0 24px 24px'}">
+          <Content  :style="{padding: '24px',margin: '88px 0 0 200px', minHeight: '800px', background: '#fff'}">
+            <VideoList/>
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
   </div>
 
 
@@ -56,17 +26,18 @@ import 'video.js/dist/video-js.css'
 import axios from 'axios';
 import HeadMenu from "../admin/HeadMenu";
 import SideMenu from "../admin/SideMenu";
-import {getPublishedVideo, getTagList, getVideoByType} from "../../api/api";
+import {getTypeList, getVideoByType} from "../../api/api";
 import moment from "moment";
+import VideoList from "./videoList";
 
 Vue.prototype.$axios = axios;
 export default {
-  components: {SideMenu, HeadMenu},
+  components: {VideoList, SideMenu, HeadMenu},
   data() {
     return {
       currentVideo:'',
 
-      tagList:[],
+      typeList:[],
       // 很多参数其实没必要的，也还有很多参数没列出来，只是把我看到的所有文章做一个统计
       playerOptions: {
         height: "30%",
@@ -115,7 +86,7 @@ export default {
   mounted() {
     this.username = localStorage.getItem("username")
     this.showVideoByType(1,0);
-    this.getTagList();
+    this.getTypeList();
   },
   computed: {
     player() {
@@ -130,7 +101,7 @@ export default {
     },
     openURL(item){
 
-      this.$router.push({name:'videoplayer',
+      this.$router.push({name:'videoSquare',
         query:{
           url: item.url,
           id: item.id,
@@ -148,10 +119,10 @@ export default {
       }
     },
 
-    async getTagList(){
-      var data = (await(getTagList())).data;
+    async getTypeList(){
+      var data = (await(getTypeList())).data;
       if(data.status === 200){
-        this.tagList = data.data.tagList;
+        this.typeList = data.data.typeList;
       }
     },
 
@@ -164,9 +135,9 @@ export default {
       if(val){
         this.curPage = val;
       }
-     // alert(this.activeIndex)
-      var tag=this.activeIndex;
-      var data = (await (getPublishedVideo(this.searchTitle,tag,this.curPage,this.pageSize))).data;
+      // alert(this.activeIndex)
+      var typeId=this.activeIndex;
+      var data = (await (getVideoByType(this.searchTitle,typeId,this.curPage,this.pageSize))).data;
       if(data.status === 200){
         this.videoInfo = data.data.videoList;
 

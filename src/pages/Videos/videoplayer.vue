@@ -1,68 +1,51 @@
 <template>
 
-  <div class="layout">
-    <Layout :style="back">
-      <HeadMenu :message="username" v-if="username.length>0"></HeadMenu>
-      <Layout>
-        <Sider hide-trigger :style="{background: '#fff',margin:'64px 0 0',position:'fixed',height: '100%'}">
-          <SideMenu/>
-        </Sider>
-        <Layout :style="{padding: '0 24px 24px'}">
+  <Layout :style="back" >
+    <Header :style="{position: 'fixed', width: '100%',padding: 0,zIndex:'3'}">
+      <Menu mode="horizontal" theme="dark" active-name="1">
+        <div class="layout-logo">
+          <img src="../../assets/shu.png" style="height: 40px">
+        </div>
+        <MenuItem name="1" >
+          <p style="color:white;margin-left: 20px;font-size: 20px;font-weight:bold;font-family: Bahnschrift">上海大学视频服务站</p>
+        </MenuItem>
+      </Menu>
+    </Header>
+    <Content :style="{padding: '24px',margin: '88px 8% 20px', minHeight: '280px', background: '#fff'}">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item ><a @click="backtolast" style="color:#2d8cf0">返回上一级</a></el-breadcrumb-item>
+        <el-breadcrumb-item>视频播放</el-breadcrumb-item>
 
-          <Content  :style="{padding: '24px',margin: '88px 30px 0 200px', background: '#fff'}">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item :to="{ name: 'videoList' }"><span style="color:#2d8cf0">返回视频广场</span></el-breadcrumb-item>
-              <el-breadcrumb-item>视频播放</el-breadcrumb-item>
-
-            </el-breadcrumb>
-            <Row type="flex" justify="left" align="top" class="code-row-bg" style="margin-top: 20px">
-              <Col span="16" >
-                <video-player   class="video-player vjs-custom-skin"
-                                ref="videoPlayer" :options="playerOptions" :playsinline="true"
-                                customEventName="customstatechangedeventname"
-                                @play="onPlayerPlay($event)"
-                                @pause="onPlayerPause($event)"
-                                @ended="onPlayerEnded($event)"
-                >
-                </video-player>
-              </Col>
-
-              <Col span="7" offset="1" style="text-align: left">
-                <h2>
-                  {{videoInfo.title}}
-                </h2>
-                <el-card class="box-card" shadow="never" style="margin-top: 20px;padding:0;background-color: #f8f9fb">
+      </el-breadcrumb>
+      <Row type="flex" justify="left" align="top" class="code-row-bg" style="margin-top: 20px">
+        <Col span="16" >
+          <video-player   class="video-player vjs-custom-skin"
+                          ref="videoPlayer" :options="playerOptions" :playsinline="true"
+                          customEventName="customstatechangedeventname"
+                          @play="onPlayerPlay($event)"
+                          @pause="onPlayerPause($event)"
+                          @ended="onPlayerEnded($event)"
+          >
+          </video-player>
+        </Col>
+        <Col span="7" offset="1" style="text-align: left">
+          <h2>
+            {{videoInfo.title}}
+          </h2>
+          <el-card class="box-card" shadow="never" style="margin-top: 20px;padding:0;background-color: #f8f9fb">
                   <span>
                     简介：{{videoInfo.description}}
                   </span>
-                  <br>
-                  <span>
+            <br>
+            <span>
                    作者：{{videoInfo.author}}
                   </span>
 
-                </el-card>
-              </Col>
-
-
-            </Row>
-
-          </Content>
-
-
-
-        </Layout>
-
-      </Layout>
-
-    </Layout>
-
-
-
-
-  </div>
-
-
-
+          </el-card>
+        </Col>
+      </Row>
+    </Content>
+  </Layout>
 </template>
 
 <script>
@@ -236,7 +219,11 @@
         this.player.play();
       }
     },
-    }
+      backtolast(){
+        this.$router.go(-1);
+      }
+    },
+
   }
 </script>
 <style>
@@ -248,6 +235,17 @@
 /*  background-color: #ffffff;*/
 /*  border: solid 1px #979797;*/
 /*}*/
+
+.layout-logo{
+  width: 100px;
+  height: 30px;
+  background: #5b6270;
+  border-radius: 3px;
+  float: left;
+  position: relative;
+  top: 15px;
+  left: 20px;
+}
 </style>
 
 

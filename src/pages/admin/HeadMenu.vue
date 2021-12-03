@@ -46,6 +46,8 @@
 
 </template>
 <script>
+import {logout} from "../../api/api";
+
 export default {
   props: {
     message: String //定义传值的类型<br>  }
@@ -71,6 +73,20 @@ export default {
     }
 
   },
+  methods:{
+    async logout(){
+
+          localStorage.clear();
+          sessionStorage.clear();
+          localStorage.setItem("logout","comfirm");
+          location.reload();
+
+
+        }
+
+
+    }
+
 
 
 

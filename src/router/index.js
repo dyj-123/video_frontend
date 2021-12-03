@@ -6,24 +6,25 @@ import videoListtest from '../pages/Videos/videoListtest.vue'
 import VideoManange from "../pages/admin/VideoManange";
 import videoList from "../pages/Videos/videoList";
 import Login from "../pages/admin/Login";
-// import videomanagetest from "../pages/admin/videomanagetest";
+import Home from "../pages/home/Home";
+import videoSquare from "../pages/Videos/videoSquare";
+
 Vue.use(Router)
 
 export default new Router({
 
   routes: [
     {
-      // 重定向
-      path: '/',
-      redirect: '/Login'
+      path:'/',
+      redirect:'/Home',
+
     },
+
     {
       path:'/Login',
       name:'Login',
       component:Login
-
     },
-
     {
       path: '/videoplayer',
       name: 'videoplayer',
@@ -46,6 +47,11 @@ export default new Router({
       component: videoListtest
     },
     {
+      path:'/videoSquare',
+      name:'videoSquare',
+      component:videoSquare
+    },
+    {
       path:'/VideoManage',
       name:'VideoManage',
       component:VideoManange
@@ -54,6 +60,12 @@ export default new Router({
       path:'/videoList',
       name:'videoList',
       component:videoList
-    }
+    },
+    {
+      path:'/Home',
+      name:'Home',
+      component:Home
+    },
+
   ]
 })

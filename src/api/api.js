@@ -27,7 +27,7 @@ export function getVideoByTitle(title,curPage,pageSize){
     });
 }
 // 通过视频标题获取个人视频
-export function getPersonalVideoByTitle(title,curPage,pageSize){
+export function getPersonalVideoByTitle(title,curPage,pageSize){//有title则相当于按title查询个人视频，没有则返回个人的所有视频
   return axios.get('/v1/personal/getVideoByTitle',
     {params:{
         'title':title,
@@ -73,7 +73,7 @@ export function getTypeList(){
   return axios.get('/v1/getTypeList')
 }
 
-export function getVideoByType(title,typeId,curPage,pageSize){
+export function getVideoByType(title,typeId,curPage,pageSize){//如果前端没有title则相当于按type查询，有title则相当于按title查询
   return axios.get('/v1/getVideoByType',{
     params:{
       'title':title,
@@ -87,3 +87,23 @@ export function login(params){
   return axios.post('/v1/login',params)
 }
 
+export function logout(){
+  return axios.get('https://oauth.shu.edu.cn/oauth/logout', {params:{
+    retUrl:"http://127.0.0.1:8080"
+    }})
+}
+
+export function getTagList(){
+  return axios.get('/v1/public/getTagList');
+}
+
+export function getPublishedVideo(title,tag,curPage,pageSize){
+  return axios.get('/v1/public/getPublishedVideo',{
+    params:{
+      'title':title,
+      'tag':tag,
+      'curPage':curPage,
+      'pageSize':pageSize
+    }
+  })
+}

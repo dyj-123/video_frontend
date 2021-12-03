@@ -234,7 +234,7 @@ import {
   deleteVideo,
   editPicture,
   editVideo,
-  getPersonalVideo,
+
   getPersonalVideoByTitle, getTypeList,
   uploadVideoToServer
 } from "../../api/api";
@@ -323,7 +323,7 @@ export default {
       var data =(await uploadVideoToServer(formdata)).data;
       if(data.status===200){
         this.$Message.success(data.msg);
-        location.reload();
+        this.getAllVideo(1);
       }else{
         this.$message.error("Fail");
       }

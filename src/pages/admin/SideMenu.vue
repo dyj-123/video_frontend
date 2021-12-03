@@ -1,11 +1,15 @@
 <template>
 
       <Menu theme="light" width="auto" :open-names="['1']">
-        <MenuItem name="1-1" to="/VideoManage">
+        <MenuItem name="1-1" to="/home">
+          <Icon type="ios-navigate"></Icon>
+          <span>返回首页</span>
+        </MenuItem>
+        <MenuItem name="1-2" to="/VideoManage">
           <Icon type="ios-navigate" ></Icon>
           <span>我的视频</span>
         </MenuItem>
-        <MenuItem name="1-2" to = "/videoList">
+        <MenuItem name="1-3" to = "/videoSquare">
           <Icon type="ios-navigate"></Icon>
           <span>视频广场</span>
         </MenuItem>

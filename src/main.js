@@ -57,7 +57,7 @@ axios.interceptors.response.use(
   error => {
     router.push({
       path: "/",
-      query: { redirect: router.currentRoute.fullPath }//从哪个页面跳转
+      query: {} //从哪个页面跳转
     })
     return Promise.reject(error)
   }

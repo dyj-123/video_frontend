@@ -9,6 +9,12 @@
 
 export default {
   name: "Login",
+  data(){
+    return{
+
+    }
+  },
+
   methods:{
     async handleOnClickLogin(code,url){
       var formdata={
@@ -26,7 +32,9 @@ export default {
         localStorage.setItem("username", data.data.name);
           this.$router.push('/VideoManage');
 
+
       } else {
+
         sessionStorage.clear();
         localStorage.clear();
         this.$Notice.warning({ title: "请检查工号或密码是否正确" });
@@ -55,25 +63,24 @@ export default {
   },
   mounted() {
 
-
-
-
       let token =  localStorage.getItem("token");
       let logout = localStorage.getItem("logout");
       if (token) {
           this.handleOnClickLogin("", "");
-      } else if (logout == "comfirm ") {
+      } else if (logout === "comfirm") {
           localStorage.removeItem("logout");
           window.location.href =
-              "https://oauth.shu.edu.cn/oauth/logout?retUrl=" + window.location.href;
+              "https://oauth.shu.edu.cn/oauth/logout?redirect_uri=" +"http://127.0.0.1:8080/login" ;
+
       } else {
           var code = this.getQueryVariable("code");
           console.log(code);
           if (code) {
-              console.log(code);
-              this.handleOnClickLogin(code, document.location.href.split("?")[0]);
+             // alert(document.location.href.split("?")[0]);
+              this.handleOnClickLogin(code,"http://127.0.0.1:8080/login");
           } else {
               // 请求code
+            alert("重新请求")
               document.location.href =
                   "http://oauth.shu.edu.cn/oauth/authorize?response_type=code&client_id=Tp8uecHJi00aHlpufk8Fqp2A_2zpaKzS" +
                   "&redirect_uri=http://127.0.0.1:8080/login" +
